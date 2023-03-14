@@ -6,7 +6,7 @@
 
 @foreach (var activity in courseSelectedModulesActivities)
 {
-    <p><EditButton Left="-5px" Top="-2px" StartEditing="doSomething" />@activity.Name</p>
+    <p><EditButton Left="-5px" Top="-2px" StartEditing="editActivity" />@activity.Name</p>
 }
 
 @code {
@@ -17,6 +17,14 @@
     private void doSomething()
     {
         Console.WriteLine("From activities");
+    }
+
+    [Parameter]
+    public EventCallback editModal { get; set; }
+
+    private void editActivity()
+    {
+        editModal.InvokeAsync();
     }
 
 }
