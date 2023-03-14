@@ -19,14 +19,17 @@ namespace LexiconLMS.Server.Repositories
         {
             var courseDtos = db.Courses.Select(c => new CourseDto
             {
+                Id = c.Id,
                 Desc = c.Desc,
                 Name = c.Name,
                 Modules = c.Modules.Select(m => new ModuleDto
                 {
+                    Id = m.Id,
                     Name = m.Name,
                     Desc = m.Desc,
                     Activitys = m.Activitys.Select(a => new ActivityDto
                     {
+                        Id = a.Id,
                         Name = a.Name,
                         Desc = a.Desc
                     })

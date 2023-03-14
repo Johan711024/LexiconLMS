@@ -17,8 +17,10 @@
         }
         else
         {
+            var editCourse = "course";
+            var editCourseId = courseSelected.Id;
             <h1>@courseSelected.Name</h1>
-            <EditButton Top="-10px" Left="-4px"></EditButton>
+            <EditButton StartEditing="()=>openEdit(editCourse, editCourseId)" Top=" -10px" Left="-4px"></EditButton>
         
             <p>Kursbeskrivning:&nbsp;@courseSelected.Desc</p>
 
@@ -29,7 +31,11 @@
             }
             else
             {
-                <ModuleActivitiesTeachers courseSelectedModules="@courseSelected.Modules" />
+                var editModule = "module";
+                var editModuleId = @courseSelected.Id;
+                var editActivity = "activity";
+
+                <ModuleActivitiesTeachers forEditingModules="()=>openEdit(editModule, editModuleId)" forEditingActivities="()=>openEdit(editActivity)" courseSelectedModules="@courseSelected.Modules" />
             }
         }
     }
@@ -37,7 +43,11 @@
 
 </div>
 
+<Modal @ref="Modal" />
+
 @code {
+
+
 
     [Parameter]
     public CourseDto courseSelected { get; set; }
@@ -45,6 +55,39 @@
     private void doSomething()
     {
         Console.WriteLine("courseSelected: " + courseSelected);
+    }
+
+
+
+    public Modal? Modal { get; set; }
+
+    private void openEdit(string editName, int id=0)
+    {
+        Console.WriteLine("Open for edit...: " + editName);
+        Modal?.Open();
+
+        
+
+        switch (editName)
+        {
+            case  "course":
+                Console.WriteLine($"Course with id {id}.");
+
+                break;
+
+            case "module":
+                Console.WriteLine($"Module with id {id}.");
+                break;
+
+            case "activity":
+                Console.WriteLine($"Activity with id {id}.");
+                break;
+
+            default:
+                Console.WriteLine("found nothing to edit");
+                break;
+        }
+
     }
 
 }

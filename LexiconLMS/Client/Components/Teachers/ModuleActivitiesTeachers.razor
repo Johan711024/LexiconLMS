@@ -23,12 +23,12 @@
                     </button>
                 </h2>
 
-                <EditButton StartEditing="()=>openEditModule()" Top="-48px" Left="0px"></EditButton>
+                <EditButton StartEditing="forEditingModules" Top="-48px" Left="0px"></EditButton>
 
                 <div id="panelsStayOpen-collapse@(i)" class="accordion-collapse collapse @(i==1 ? "show" : "")" aria-labelledby="panelsStayOpen-headingOne">
                     <div class="accordion-body">
 
-                        <ActivityTeachers editModal="openEditActivity" courseSelectedModulesActivities="@module.Activitys" />
+                        <ActivityTeachers forEditingActivities="forEditingActivities" courseSelectedModulesActivities="@module.Activitys" />
 
                     </div>
                 </div>
@@ -37,7 +37,7 @@
     </div>
 </div>
 
-<Modal @ref="Modal" />
+
 
 @code {
 
@@ -53,17 +53,11 @@
         Console.WriteLine("From activities");
     }
 
-    private  void openEditModule()
-    {
+    [Parameter]
+    public EventCallback forEditingModules { get; set; }
 
-        Console.WriteLine("Open module for edit... ");
-
-        Modal?.Open();
-    }
-    private void openEditActivity()
-    {
-        Console.WriteLine("Open activity for edit... ");
-        Modal?.Open();
-    }
+    [Parameter]
+    public EventCallback forEditingActivities { get; set; }
+    
 
 }
