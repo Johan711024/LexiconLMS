@@ -2,7 +2,7 @@
 
 <div id="moduleActivites" style="width: 100%">
     
-
+    module
     <div class="accordion" id="accordionPanelsStayOpenExample">
 
         @{
@@ -22,7 +22,7 @@
                         @module.Name
                     </button>
                 </h2>
-                <EditButton Top="-48px" Left="0px"></EditButton>
+                <EditButton Top="-48px" Left="0px" StartEditing="doSomething2"></EditButton>
                 <div id="panelsStayOpen-collapse@(i)" class="accordion-collapse collapse @(i==1 ? "show" : "")" aria-labelledby="panelsStayOpen-headingOne">
                     <div class="accordion-body">
 
@@ -35,7 +35,14 @@
     </div>
 </div>
 
+@openModal ? <Modal /> : "hello";
+
 @code {
+    public bool openModal { get; set; } = false;
+
+
+   
+
 
     [Parameter]
     public IEnumerable<ModuleDto> courseSelectedModules { get; set; } = new List<ModuleDto>();
@@ -44,10 +51,13 @@
     {
         Console.WriteLine("From activities");
     }
-    
-    private async void doSomething2()
+
+    private  void doSomething2()
     {
-        Console.WriteLine("From activitites, edit button2");
+        openModal = true;
+        
+        Console.WriteLine("From activitites, edit button2: " + openModal.ToString());
+
     }
 
 }

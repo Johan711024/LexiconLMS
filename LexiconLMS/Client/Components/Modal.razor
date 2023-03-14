@@ -4,24 +4,61 @@
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+    <div class="modal @ModalClass"
+         tabindex="-1"
+         role="dialog"
+         style="display:@ModalDisplay">
+    
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button @onclick="OnClose" @onclick:preventDefault="true" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 ...
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button @onclick="OnClose" @onclick:preventDefault="true" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary">Understood</button>
             </div>
         </div>
     </div>
 </div>
 
+    @if (ShowBackdrop)
+    {
+        <div class="modal-backdrop fade show"></div>
+    }
+
 @code {
+
+
+    public Guid Guid = Guid.NewGuid();
+    public string ModalDisplay = "block;";
+    public string ModalClass = "";
+    public bool ShowBackdrop = true;
+
+    public void Open()
+    {
+        ModalDisplay = "block;";
+        ModalClass = "Show";
+        ShowBackdrop = true;
+        StateHasChanged();
+
+    }
+
+    [Parameter]
+    public EventCallback Close { get; set; }
+
+    public async void OnClose()
+    {
+        ModalDisplay = "none";
+        ModalClass = "";
+        ShowBackdrop = false;
+        await Close.InvokeAsync();
+
+    }
 
 }
