@@ -35,10 +35,10 @@
     </div>
 </div>
 
-@openModal ? <Modal /> : "hello";
+<Modal />
 
 @code {
-    public bool openModal { get; set; } = false;
+    
 
 
    
@@ -54,9 +54,8 @@
 
     private  void doSomething2()
     {
-        openModal = true;
         
-        Console.WriteLine("From activitites, edit button2: " + openModal.ToString());
+        Console.WriteLine("From activitites, edit button2: ");
 
     }
 
