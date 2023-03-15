@@ -1,5 +1,7 @@
+@using LexiconLMS.Client.State;
 @using LexiconLMS.Shared.DTOs;
-
+@implements IDisposable
+@inject StateContainer StateContainer
 
 <div id="courseModules" style="
 
@@ -17,10 +19,8 @@
         }
         else
         {
-            var editCourse = "course";
-            var editCourseId = courseSelected.Id;
             <h1>@courseSelected.Name</h1>
-            <EditButton StartEditing="()=>openEdit(editCourse, editCourseId)" Top=" -10px" Left="-4px"></EditButton>
+            <EditButton StartEditing="()=>ChangePropertyValue(courseSelected)" Top=" -10px" Left="-4px"></EditButton>
         
             <p>Kursbeskrivning:&nbsp;@courseSelected.Desc</p>
 
@@ -43,7 +43,7 @@
 
 </div>
 
-<Modal @ref="Modal" />
+
 
 @code {
 
@@ -59,14 +59,14 @@
 
 
 
-    public Modal? Modal { get; set; }
+
 
     private void openEdit(string editName, int id=0)
     {
         Console.WriteLine("Open for edit...: " + editName);
-        Modal?.Open();
 
-        
+
+
 
         switch (editName)
         {
@@ -88,6 +88,29 @@
                 break;
         }
 
+    }
+
+    //----------------------------------------------------
+    //state management
+
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+    private void ChangePropertyValue(CourseDto course)
+    {
+        StateContainer.EditCourse = course;
+        ChangeModalValue();
+
+    }
+    private void ChangeModalValue()
+    {
+        StateContainer.ModalOpen = true;
+        StateContainer.ModalContentType = "EditCourse";
+    }
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
     }
 
 }

@@ -1,0 +1,62 @@
+﻿@using LexiconLMS.Client.State;
+@implements IDisposable
+@inject StateContainer StateContainer
+
+
+
+<div style="background-color: #ccc">
+    <div class="row justify-content-center gx-5"><h2>State Management</h2></div>
+    <div class="row justify-content-center gx-5">
+        <div class="col-4">
+            <p>Course:</p>
+            @if (StateContainer.EditCourse != null)
+            {
+                <p>@StateContainer.EditCourse.Name</p>
+                <p>@StateContainer.EditCourse.Desc</p>
+                <p>@StateContainer.EditCourse.Id</p>
+            }
+        </div>
+        <div class="col-4">
+            <p>Module:</p>
+            @if (StateContainer.EditModule != null)
+            {
+                <p>@StateContainer.EditModule.Name</p>
+                <p>@StateContainer.EditModule.Desc</p>
+                <p>@StateContainer.EditModule.Id</p>
+            }
+        </div>
+        <div class="col-2">
+            <p>Activity:</p>
+            @if (StateContainer.EditActivity != null)
+            {
+                <p>@StateContainer.EditActivity.Name</p>
+                <p>@StateContainer.EditActivity.Desc</p>
+                <p>@StateContainer.EditActivity.Id</p>
+            }
+        </div>
+        <div class="col-2">
+            <p>Modal</p>
+
+            <p>Open: @StateContainer.ModalOpen</p>
+            <p>ContentType: @StateContainer.ModalContentType</p>
+
+        </div>
+    </div>
+</div>
+
+@code {
+
+
+    //----------------------------------------------------
+    //state management
+
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
+    }
+
+}

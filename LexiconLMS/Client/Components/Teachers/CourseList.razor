@@ -1,6 +1,8 @@
+@using LexiconLMS.Client.State;
 @using LexiconLMS.Shared.DTOs;
 @using LexiconLMS.Client.Services;
-    
+@implements IDisposable
+@inject StateContainer StateContainer
 
 
 
@@ -44,6 +46,8 @@
     {
         Console.WriteLine("From courseList GetCourse");
 
+        ChangePropertyValue(course);
+
         await xGetCourse.InvokeAsync(course);
     }
 
@@ -51,7 +55,24 @@
     {
         Console.WriteLine("CreateCourse");
 
+
+    }
+
+    //----------------------------------------------------
+    //state management
+
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+    private void ChangePropertyValue(CourseDto course)
+    {
+        StateContainer.EditCourse = course;
         
+    }
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
     }
     
 }

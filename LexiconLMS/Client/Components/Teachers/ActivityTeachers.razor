@@ -1,12 +1,14 @@
-﻿@using LexiconLMS.Shared.DTOs;
+﻿@using LexiconLMS.Client.State;
+@using LexiconLMS.Shared.DTOs;
+@implements IDisposable
+@inject StateContainer StateContainer
 
-
-<p><b>Aktivteter</b></p>
+<p><b>Aktiviteter</b></p>
 
 
 @foreach (var activity in courseSelectedModulesActivities)
 {
-    <p><EditButton Left="-5px" Top="-2px" StartEditing="forEditingActivities" />@activity.Name</p>
+    <p><EditButton Left="-5px" Top="-2px" StartEditing="()=>ChangePropertyValue(activity)" />@activity.Name</p>
 }
 
 @code {
@@ -18,10 +20,31 @@
     {
         Console.WriteLine("From activities");
     }
-    
-
     [Parameter]
     public EventCallback forEditingActivities { get; set; }
 
 
+    //----------------------------------------------------
+    //state management
+
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+    private void ChangePropertyValue(ActivityDto activity)
+    {
+        StateContainer.EditActivity = activity;
+
+        ChangeModalValue();
+
+    }
+    private void ChangeModalValue()
+    {
+        StateContainer.ModalOpen = true;
+        StateContainer.ModalContentType = "EditActivity";
+    }
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
+    }
 }

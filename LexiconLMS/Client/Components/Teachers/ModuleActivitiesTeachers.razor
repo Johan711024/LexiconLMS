@@ -1,4 +1,7 @@
+@using LexiconLMS.Client.State;
 @using LexiconLMS.Shared.DTOs;
+@implements IDisposable
+@inject StateContainer StateContainer
 
 <div id="moduleActivites" style="width: 100%">
     
@@ -23,7 +26,7 @@
                     </button>
                 </h2>
 
-                <EditButton StartEditing="forEditingModules" Top="-48px" Left="0px"></EditButton>
+                <EditButton StartEditing="()=>ChangePropertyValue(module)" Top="-48px" Left="0px"></EditButton>
 
                 <div id="panelsStayOpen-collapse@(i)" class="accordion-collapse collapse @(i==1 ? "show" : "")" aria-labelledby="panelsStayOpen-headingOne">
                     <div class="accordion-body">
@@ -58,6 +61,30 @@
 
     [Parameter]
     public EventCallback forEditingActivities { get; set; }
-    
 
+
+    //----------------------------------------------------
+    //state management
+
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+    private void ChangePropertyValue(ModuleDto module)
+    {
+        StateContainer.EditModule = module;
+
+        ChangeModalValue();
+
+    }
+    private void ChangeModalValue()
+    {
+        StateContainer.ModalOpen = true;
+        StateContainer.ModalContentType = "EditModule";
+    }
+
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
+    }
 }

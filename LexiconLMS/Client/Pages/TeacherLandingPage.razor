@@ -1,20 +1,17 @@
 ﻿@page "/TeacherLandingPage"
 @using LexiconLMS.Client.Components.Teachers
+@using LexiconLMS.Client.Components;
+@using LexiconLMS.Client.State;
 @using LexiconLMS.Shared.DTOs;
 @using LexiconLMS.Client.Services;
-@using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-    
+@implements IDisposable
+@inject StateContainer StateContainer
 
-@inject AuthenticationStateProvider authenticationStateProvider;
-@inject IAccessTokenProvider accessTokenProvider;
-
+<StateManagementTool />
 
 
-<div id="teacherLandingPage" class="container" style="
-        
-    
+<div id="teacherLandingPage" class="container">
 
-">
     <div class="row justify-content-center gx-5">
         <div class="col-3" style="align-content: end">
             <CourseList courseList="courses" xGetCourse="selectCourse"></CourseList>
@@ -24,9 +21,23 @@
         </div>
     </div>
 </div>
+<Modal @ref="Modal" />
+
+@{
+    if (StateContainer.ModalOpen)
+    {
+        Modal?.Open();
+    }
+    else
+    {
+        Modal?.Close();
+    }
+}
 
 
 @code {
+
+    public Modal? Modal { get; set; }
 
     private IEnumerable<CourseDto> courses = new List<CourseDto>();
 
@@ -35,8 +46,35 @@
     [Inject]
     public ICourseClient CourseClient { get; set; } = default!;
 
+    public void StateModalEditReducer(){
+
+        switch (StateContainer.ModalContentType)
+        {
+            case  "course":
+                var dtoCourse = StateContainer.EditCourse;
+                Console.WriteLine($"Course with id {dtoCourse.Id}.");
+                break;
+
+            case "module":
+                var dtoModule = StateContainer.EditModule;
+                Console.WriteLine($"Module with id {dtoModule.Id}.");
+                break;
+
+            case "activity":
+                var dtoActivity = StateContainer.EditActivity;
+                Console.WriteLine($"Activity with id {dtoActivity.Id}.");
+                break;
+
+            default:
+                Console.WriteLine("found nothing to edit");
+                break;
+        }
+    }
+
+
     protected override async Task OnInitializedAsync()
     {
+
         var res = await CourseClient.GetAsync();
         courses = res;
     }   
@@ -52,7 +90,16 @@
         return "2";
     }
 
-    
+    //----------------------------------------------------
+    //state management
 
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
+    }
 
 }

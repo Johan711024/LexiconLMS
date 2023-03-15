@@ -1,21 +1,23 @@
-﻿
+﻿@using LexiconLMS.Client.State;
+@implements IDisposable
+@inject StateContainer StateContainer
 
 
-<div class="modal @ModalClass" tabindex="-1" role="dialog" style="display:@ModalDisplay">
+<div class="modal @ModalClass" tabindex="-1" role="dialog" style="display: @ModalDisplay">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Modal title</h5>
-                <button @onclick="() => Close()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button @onclick="() => ChangeModalValue()" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Modal body text goes here.</p>
+                <ModalEditContent />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary">Save changes</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => Close()">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => ChangeModalValue()">Close</button>
             </div>
         </div>
     </div>
@@ -56,5 +58,26 @@
         ModalClass = "";
         ShowBackdrop = false;
         StateHasChanged();
+    }
+
+    public void Content()
+    {
+        
+    }
+
+    //----------------------------------------------------
+    //state management
+
+    protected override void OnInitialized()
+    {
+        StateContainer.OnChange += StateHasChanged;
+    }
+    private void ChangeModalValue()
+    {
+        StateContainer.ModalOpen = false;
+    }
+    public void Dispose()
+    {
+        StateContainer.OnChange -= StateHasChanged;
     }
 }
