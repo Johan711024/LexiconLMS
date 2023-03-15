@@ -31,7 +31,7 @@ namespace LexiconLMS.Server
 
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(connectionString));
+                    options.UseSqlite(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -43,8 +43,8 @@ namespace LexiconLMS.Server
 
             //1. Register UnitOFWork
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            
-            
+
+
 
 
             builder.Services.AddIdentityServer()
